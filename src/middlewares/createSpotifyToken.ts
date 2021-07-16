@@ -8,7 +8,7 @@ export default function createSpotifyToken() {
   ) {
     try {
       const token = await createToken();
-      ctx.spotifyToken = token.access_token;
+      ctx.state.spotifyToken = token.access_token;
     } catch (err) {
       console.log('error fetching token', err);
     }

@@ -19,7 +19,7 @@ export default function fetchTrackMetadata() {
 
     let trackMetadata;
     try {
-      trackMetadata = await searchTrackByISRC(body.isrc, ctx.spotifyToken);
+      trackMetadata = await searchTrackByISRC(body.isrc, ctx.state.spotifyToken);
       console.log('res', trackMetadata);
     } catch (err) {
       ctx.throw(err.status, err.message);
@@ -33,8 +33,8 @@ export default function fetchTrackMetadata() {
 
     const tracksList = trackMetadata.tracks.items;
     tracksList.sort((a:TrackMetadata, b:TrackMetadata) => b.popularity - a.popularity);
-    ctx.trackMetadata = tracksList[0];
-    ctx.trackISRC = body.isrc;
+    ctx.state.trackMetadata = tracksList[0];
+    ctx.state.trackISRC = body.isrc;
 
     return next();
   };

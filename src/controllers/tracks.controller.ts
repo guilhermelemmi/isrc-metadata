@@ -83,11 +83,11 @@ router.post('/', createSpotifyToken(), fetchTrackMetadata(), async (ctx:Koa.Cont
   const trackRepo:Repository<trackEntity> = getRepository(trackEntity);
   const artistRepo:Repository<artistyEntity> = getRepository(artistyEntity);
 
-  const metadata = ctx.trackMetadata;
+  const metadata = ctx.state.trackMetadata;
   const artistsList = metadata.artists || [];
 
   const track:trackEntity = trackRepo.create();
-  track.isrc = ctx.trackISRC,
+  track.isrc = ctx.state.trackISRC,
   track.title = metadata.name,
   track.imageURI = metadata.album.images[0].url;
   track.artists = [];
