@@ -45,10 +45,8 @@ router.get('/', async (ctx:Koa.Context) => {
 
   const trackIds:number[] = [];
   for (let i = 0; i < artists.length; i += 1) {
-    console.log('artist is', artists[i]);
     trackIds.push(artists[i].track.id);
   }
-  console.log('trackIds', trackIds);
 
   const tracks = await getRepository(trackEntity).createQueryBuilder('track')
     .where('track.id IN (:...ids)', { ids: trackIds })

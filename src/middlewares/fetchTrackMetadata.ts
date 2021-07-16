@@ -13,7 +13,6 @@ export default function fetchTrackMetadata() {
     let trackMetadata;
     try {
       trackMetadata = await searchTrackByISRC(body.isrc, ctx.state.spotifyToken);
-      console.log('res', trackMetadata);
     } catch (err) {
       ctx.throw(err.status, err.message);
     }
