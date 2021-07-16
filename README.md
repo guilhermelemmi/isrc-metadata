@@ -35,18 +35,18 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
 
 ## API Endpoints
 ### Write ISRC
-Endpoint:
+**Endpoint:**
 
     POST http://127.0.0.1:4000/tracks
 
-cURL Request:
+**cURL Request:**
 
     curl --location --request POST 'http://127.0.0.1:4000/tracks' \
 	--header 'Content-Type: application/json' \
 	--data-raw '{
 	  "isrc": "GBAYE0601498"
 	}'
-Response:
+**Response:**
 
     {
 	  "data": {
@@ -62,15 +62,15 @@ Response:
 	}
 
 ### Read Track by ISRC
-Endpoint:
+**Endpoint:**
 
     GET http://127.0.0.1:4000/tracks/GBAYE0601498
 
-cURL Request:
+**cURL Request:**
 
     curl --location --request GET 'http://127.0.0.1:4000/tracks/GBAYE0601498'
 
-Response:
+**Response:**
 
     {
 	  "data": {
@@ -87,15 +87,15 @@ Response:
 
 
 ### Read Tracks by Artist
-Endpoint:
+**Endpoint:**
 
     GET http://127.0.0.1:4000/tracks/?artist=Beatles
 
-cURL Request:
+**cURL Request:**
 
     curl --location --request GET 'http://127.0.0.1:4000/tracks/?artist=Beatles'
 
-Response:
+**Response:**
 
     {
 	  "data": {
@@ -135,7 +135,7 @@ This doesn't scale well in the real world as it opens the application to DOS and
 To address those concerns, three actions needs to be taken:
 
  - Implement proper logging and monitoring, to have visibility over issues and abusers;
- - Protect all endpoints with [Rate Limitin](https://cloud.google.com/architecture/rate-limiting-strategies-techniques);
+ - Protect all endpoints with [Rate Limiting](https://cloud.google.com/architecture/rate-limiting-strategies-techniques);
  - Implement endpoint authentication with JWT (JSON Web Tokens):
     To get a valid token, an application would first need to register itself to get access to a private key and secret. Once an application has this key and secret stored safely on server side, it could use those values to call a `login` endpoint which would validate the client key and secret and then issue a JWT Token to be used by the client in the subsequent requests. It subsequent request is only successful if the token is passed in the HTTP headers and if the token is valid.
     
