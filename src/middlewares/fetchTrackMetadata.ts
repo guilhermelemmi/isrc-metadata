@@ -1,21 +1,14 @@
 import * as Koa from 'koa';
 import { StatusCodes } from 'http-status-codes';
 import { searchTrackByISRC } from '../services/spotifyService';
-
-interface AddTrackRequest2 {
-  isrc: string;
-}
-
-interface TrackMetadata {
-  popularity: number;
-}
+import { AddTrackRequest, TrackMetadata } from '../interfaces/interfaces';
 
 export default function fetchTrackMetadata() {
   return async function fetchTrackMetadataMiddleware(
     ctx: Koa.Context,
     next: () => Promise<any>,
   ) {
-    const body = ctx.request.body as AddTrackRequest2;
+    const body = ctx.request.body as AddTrackRequest;
 
     let trackMetadata;
     try {

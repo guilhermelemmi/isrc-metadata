@@ -7,14 +7,6 @@ import artistyEntity from '../entities/artist.entity';
 import fetchTrackMetadata from '../middlewares/fetchTrackMetadata';
 import createSpotifyToken from '../middlewares/createSpotifyToken';
 
-interface AddTrackRequest {
-  isrc: string;
-}
-
-interface ArtistMetadata {
-  name: string;
-}
-
 const routerOpts: Router.IRouterOptions = {
   prefix: '/tracks',
 };
@@ -48,14 +40,6 @@ router.get('/', async (ctx:Koa.Context) => {
     },
     relations: ['track'],
   });
-  // const artists = await artistRepo.find({
-  //   relations: ['track'],
-  // });
-
-  // const artists:artistyEntity[] = await getRepository(artistyEntity).find({
-  //   name: Like(`%${query.artist}%`),
-  //   relations: ['track'],
-  // });
 
   if (!artists || !artists.length) return ctx.status = StatusCodes.NOT_FOUND;
 
@@ -94,7 +78,6 @@ router.post('/', createSpotifyToken(), fetchTrackMetadata(), async (ctx:Koa.Cont
 
   for (let i = 0; i < artistsList.length; i += 1) {
     const artist:artistyEntity = artistRepo.create({ name: artistsList[i].name });
-    // await artistRepo.save(artist);
     track.artists.push(artist);
   }
 
