@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: isrc-metadata
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+    expose:
+      - "5432"
+
+  web:
+    image: lemmi/isrc-metadata:latest
+    depends_on:
+      - db
+    ports:
+      - "4000:4000"
