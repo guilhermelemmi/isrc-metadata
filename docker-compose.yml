@@ -16,7 +16,7 @@ services:
       - "5432"
 
   web:
-    image: lemmi/isrc-metadata:1216
+    image: lemmi/isrc-metadata:latest
     depends_on:
       - db
     ports:
