@@ -1,6 +1,6 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository, Like } from 'typeorm';
 import trackEntity from '../entities/track.entity';
 import { StatusCodes } from 'http-status-codes';
 import artistyEntity from '../entities/artist.entity';
@@ -35,34 +35,68 @@ router.get('/:track_isrc', async (ctx:Koa.Context) => {
   };
 });
 
-// router.get('/search?isrc:track_isrc', async (ctx:Koa.Context) => {
-//   const trackRepo:Repository<trackEntity> = getRepository(trackEntity);
-//   const track = await trackRepo.findOne(ctx.params.track_isrc);
+router.get('/', async (ctx:Koa.Context) => {
+  const query = ctx.request.query;
 
-//   if (!track) {
-//     ctx.throw(StatusCodes.NOT_FOUND);
-//   }
+  if (!query || !query.artist) return ctx.status = StatusCodes.BAD_REQUEST;
 
-//   ctx.body = {
-//     data: { track },
-//   };
-// });
+  const artistRepo:Repository<artistyEntity> = getRepository(artistyEntity);
+  const artists = await artistRepo.find({
+    select: ['name'],
+    where: {
+      name: Like(`%${query.artist}%`),
+    },
+    relations: ['track'],
+  });
+  // const artists = await artistRepo.find({
+  //   relations: ['track'],
+  // });
+
+  // const artists:artistyEntity[] = await getRepository(artistyEntity).find({
+  //   name: Like(`%${query.artist}%`),
+  //   relations: ['track'],
+  // });
+
+  if (!artists || !artists.length) return ctx.status = StatusCodes.NOT_FOUND;
+
+  const trackIds:number[] = [];
+  for (let i = 0; i < artists.length; i += 1) {
+    console.log('artist is', artists[i]);
+    trackIds.push(artists[i].track.id);
+  }
+  console.log('trackIds', trackIds);
+
+  const tracks = await getRepository(trackEntity).createQueryBuilder('track')
+    .where('track.id IN (:...ids)', { ids: trackIds })
+    .getMany();
+
+  if (!tracks || !tracks.length) {
+    ctx.throw(StatusCodes.NOT_FOUND);
+  }
+
+  ctx.body = {
+    data: { tracks },
+  };
+});
 
 router.post('/', createSpotifyToken(), fetchTrackMetadata(), async (ctx:Koa.Context) => {
   const trackRepo:Repository<trackEntity> = getRepository(trackEntity);
+  const artistRepo:Repository<artistyEntity> = getRepository(artistyEntity);
 
   const metadata = ctx.trackMetadata;
   const artistsList = metadata.artists || [];
-  const artists:[artistyEntity] = artistsList.map((artist:ArtistMetadata) => {
-    console.log('artist', artist.name);
-    return { name: artist.name };
-  });
-  const track:trackEntity = trackRepo.create({
-    artists,
-    isrc: ctx.trackISRC,
-    title: metadata.name,
-    imageURI: metadata.album.images[0].url,
-  });
+
+  const track:trackEntity = trackRepo.create();
+  track.isrc = ctx.trackISRC,
+  track.title = metadata.name,
+  track.imageURI = metadata.album.images[0].url;
+  track.artists = [];
+
+  for (let i = 0; i < artistsList.length; i += 1) {
+    const artist:artistyEntity = artistRepo.create({ name: artistsList[i].name });
+    // await artistRepo.save(artist);
+    track.artists.push(artist);
+  }
 
   await trackRepo.save(track);
 

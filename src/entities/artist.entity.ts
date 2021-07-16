@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import Track from './track.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import trackEntity from './track.entity';
 
 @Entity()
 export default class Artist {
@@ -10,6 +10,7 @@ export default class Artist {
   @Column()
   name: string;
 
-  @ManyToOne(() => Track, track => track.artists)
-  track: Track;
+  @ManyToOne(() => trackEntity, track => track.artists)
+  @JoinColumn({ name: 'track_id' })
+  track: trackEntity;
 }
