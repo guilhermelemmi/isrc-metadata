@@ -22,11 +22,7 @@ SPOTIFY_CLIENT_SECRET={YOUR SPOTIFY CLIENT SECRET}
 
 After you done that, open a terminal window, navigate to the project folder and run:
 ```
-docker build lemmi/isrc-metadata:latest .
-```
-followed by:
-```
-docker compose up
+docker compose up --build
 ```
 This will install the PostgreSQL DB and run the ISRC Metadata API on your http://localhost:4000.
 
