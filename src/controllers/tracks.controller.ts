@@ -17,7 +17,10 @@ const router: Router = new Router(routerOpts);
 router.get('/:track_isrc', async (ctx: Koa.Context) => {
   const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
 
-  const track = await trackRepo.findOne({ isrc: ctx.params.track_isrc });
+  const track = await trackRepo.findOne({
+    where: { isrc: ctx.params.track_isrc },
+    relations: ['artists'],
+  });
 
   if (!track) {
     ctx.throw(StatusCodes.NOT_FOUND);
