@@ -4,6 +4,7 @@ import { getRepository, Repository, Like } from 'typeorm';
 import trackEntity from '../entities/track.entity';
 import { StatusCodes } from 'http-status-codes';
 import artistyEntity from '../entities/artist.entity';
+import fetchLocalTrackMetadata from '../middlewares/fetchLocalTrackMetadata';
 import fetchTrackMetadata from '../middlewares/fetchTrackMetadata';
 import createSpotifyToken from '../middlewares/createSpotifyToken';
 
@@ -62,30 +63,36 @@ router.get('/', async (ctx: Koa.Context) => {
   };
 });
 
-router.post('/', createSpotifyToken(), fetchTrackMetadata(), async (ctx: Koa.Context) => {
-  const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
-  const artistRepo: Repository<artistyEntity> = getRepository(artistyEntity);
+router.post(
+  '/',
+  fetchLocalTrackMetadata(),
+  createSpotifyToken(),
+  fetchTrackMetadata(),
+  async (ctx: Koa.Context) => {
+    const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
+    const artistRepo: Repository<artistyEntity> = getRepository(artistyEntity);
 
-  const metadata = ctx.state.trackMetadata;
-  const artistsList = metadata.artists || [];
+    const metadata = ctx.state.trackMetadata;
+    const artistsList = metadata.artists || [];
 
-  const track: trackEntity = trackRepo.create();
-  track.isrc = ctx.state.trackISRC;
-  track.title = metadata.name;
-  track.imageURI = metadata.album.images[0].url;
-  track.artists = [];
+    const track: trackEntity = trackRepo.create();
+    track.isrc = ctx.state.trackISRC;
+    track.title = metadata.name;
+    track.imageURI = metadata.album.images[0].url;
+    track.artists = [];
 
-  for (let i = 0; i < artistsList.length; i += 1) {
-    const artist: artistyEntity = artistRepo.create({ name: artistsList[i].name });
-    track.artists.push(artist);
+    for (let i = 0; i < artistsList.length; i += 1) {
+      const artist: artistyEntity = artistRepo.create({ name: artistsList[i].name });
+      track.artists.push(artist);
+    }
+
+    await trackRepo.save(track);
+
+    ctx.response.status = StatusCodes.CREATED;
+    ctx.body = {
+      data: { track },
+    };
   }
-
-  await trackRepo.save(track);
-
-  ctx.response.status = StatusCodes.CREATED;
-  ctx.body = {
-    data: { track },
-  };
-});
+);
 
 export default router;
