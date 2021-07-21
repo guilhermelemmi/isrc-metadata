@@ -15,14 +15,22 @@ export const createToken = async () => {
     .then((res) => res.data);
 };
 
-export const searchTrackByISRC = async (isrc: string, token: string) => {
-  const url = `https://api.spotify.com/v1/search?q=isrc:${isrc}&type=track`;
-  return await axios
-    .get(url, {
-      headers: {
-        'Content-Type': 'application/',
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((res) => res.data);
+export const searchTracksByISRC = async (isrc: string, token: string, fetchAll: boolean = true) => {
+  let nextPageUrl = `https://api.spotify.com/v1/search?q=isrc:${isrc}&type=track`;
+  const allTracks = [];
+  do {
+    const { tracks } = await axios
+      .get(nextPageUrl, {
+        headers: {
+          'Content-Type': 'application/',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => res.data);
+
+    nextPageUrl = tracks.next;
+    allTracks.push(...tracks.items);
+  } while (fetchAll && nextPageUrl);
+
+  return allTracks;
 };
