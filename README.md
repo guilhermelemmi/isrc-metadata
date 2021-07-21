@@ -49,9 +49,15 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
 	    "tracks": [
 		  {
 		    "id": 100,
-			"isrc": "GBAYE0601498",
-			"title": "Yellow Submarine - Remastered 2009",
-			"imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a"
+			  "isrc": "GBAYE0601498",
+			  "title": "Yellow Submarine - Remastered 2009",
+			  "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
+        "artists": [
+          {
+            id: 1,
+            name: "The Beatles"
+          }
+        ]
 		  }
 		]
 	  }
@@ -73,11 +79,17 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
 	    "tracks": [
 		  {
 		    "id": 100,
-			"isrc": "GBAYE0601498",
-			"title": "Yellow Submarine - Remastered 2009",
-			"imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a"
+			  "isrc": "GBAYE0601498",
+			  "title": "Yellow Submarine - Remastered 2009",
+			  "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
+        "artists": [
+          {
+            id: 1,
+            name: "The Beatles"
+          }
+        ]
 		  }
-		]
+		 ]
 	  }
 	}
 
@@ -98,9 +110,15 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
 	    "tracks": [
 		  {
 		    "id": 100,
-			"isrc": "GBAYE0601498",
-			"title": "Yellow Submarine - Remastered 2009",
-			"imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a"
+			  "isrc": "GBAYE0601498",
+			  "title": "Yellow Submarine - Remastered 2009",
+			  "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
+        "artists": [
+          {
+            id: 1,
+            name: "The Beatles"
+          }
+        ]
 		  }
 		]
 	  }
@@ -142,6 +160,6 @@ To address those concerns, three actions needs to be taken:
 # Next Steps
  - create unit tests
  - integrate swagger documentation
- - fix bugs
+ - ~~fix known bugs~~
  - improve performance and security as outlined above
  - create a demo frontend app
