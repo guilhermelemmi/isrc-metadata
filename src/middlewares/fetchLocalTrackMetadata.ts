@@ -4,7 +4,10 @@ import { AddTrackRequest } from '../interfaces/interfaces';
 import trackEntity from '../entities/track.entity';
 
 export default function fetchLocalTrackMetadata() {
-  return async function fetchLocalTrackMetadataMiddleware(ctx: Koa.Context) {
+  return async function fetchLocalTrackMetadataMiddleware(
+    ctx: Koa.Context,
+    next: () => Promise<any>
+  ) {
     const body = ctx.request.body as AddTrackRequest;
     const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
     const track = await trackRepo.findOne({
@@ -12,10 +15,12 @@ export default function fetchLocalTrackMetadata() {
       relations: ['artists'],
     });
 
-    if (track) {
-      ctx.body = {
-        data: { track },
-      };
+    if (!track) {
+      return next();
     }
+
+    ctx.body = {
+      data: { track },
+    };
   };
 }
