@@ -4,10 +4,7 @@ import { searchTrackByISRC } from '../services/spotifyService';
 import { AddTrackRequest, TrackMetadata } from '../interfaces/interfaces';
 
 export default function fetchTrackMetadata() {
-  return async function fetchTrackMetadataMiddleware(
-    ctx: Koa.Context,
-    next: () => Promise<any>,
-  ) {
+  return async function fetchTrackMetadataMiddleware(ctx: Koa.Context, next: () => Promise<any>) {
     const body = ctx.request.body as AddTrackRequest;
 
     let trackMetadata;
@@ -17,14 +14,17 @@ export default function fetchTrackMetadata() {
       ctx.throw(err.status, err.message);
     }
 
-    if (!trackMetadata
-      || !trackMetadata.tracks
-      || !trackMetadata.tracks.items || !trackMetadata.tracks.items.length) {
+    if (
+      !trackMetadata ||
+      !trackMetadata.tracks ||
+      !trackMetadata.tracks.items ||
+      !trackMetadata.tracks.items.length
+    ) {
       ctx.throw(404, 'Track not found');
     }
 
     const tracksList = trackMetadata.tracks.items;
-    tracksList.sort((a:TrackMetadata, b:TrackMetadata) => b.popularity - a.popularity);
+    tracksList.sort((a: TrackMetadata, b: TrackMetadata) => b.popularity - a.popularity);
     ctx.state.trackMetadata = tracksList[0];
     ctx.state.trackISRC = body.isrc;
 

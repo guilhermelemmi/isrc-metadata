@@ -10,15 +10,13 @@ const connectionOpts: ConnectionOptions = {
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'isrc-metadata',
-  entities: [
-    `${parentDir}/**/*.entity.ts`,
-  ],
+  entities: [`${parentDir}/**/*.entity.ts`],
   synchronize: true,
 };
 
 const connectToDb = async () => {
   let retries = 5;
-  let connection:Connection;
+  let connection: Connection;
 
   while (retries) {
     try {
@@ -28,7 +26,7 @@ const connectToDb = async () => {
       console.log(err);
       retries -= 1;
       console.log(`retries left: ${retries}`);
-      await new Promise<void>(res => setTimeout(res, 5000));
+      await new Promise<void>((res) => setTimeout(res, 5000));
     }
   }
 

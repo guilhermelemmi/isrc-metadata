@@ -13,8 +13,8 @@ const routerOpts: Router.IRouterOptions = {
 
 const router: Router = new Router(routerOpts);
 
-router.get('/:track_isrc', async (ctx:Koa.Context) => {
-  const trackRepo:Repository<trackEntity> = getRepository(trackEntity);
+router.get('/:track_isrc', async (ctx: Koa.Context) => {
+  const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
 
   const track = await trackRepo.findOne({ isrc: ctx.params.track_isrc });
 
@@ -27,12 +27,12 @@ router.get('/:track_isrc', async (ctx:Koa.Context) => {
   };
 });
 
-router.get('/', async (ctx:Koa.Context) => {
+router.get('/', async (ctx: Koa.Context) => {
   const query = ctx.request.query;
 
-  if (!query || !query.artist) return ctx.status = StatusCodes.BAD_REQUEST;
+  if (!query || !query.artist) return (ctx.status = StatusCodes.BAD_REQUEST);
 
-  const artistRepo:Repository<artistyEntity> = getRepository(artistyEntity);
+  const artistRepo: Repository<artistyEntity> = getRepository(artistyEntity);
   const artists = await artistRepo.find({
     select: ['name'],
     where: {
@@ -41,14 +41,15 @@ router.get('/', async (ctx:Koa.Context) => {
     relations: ['track'],
   });
 
-  if (!artists || !artists.length) return ctx.status = StatusCodes.NOT_FOUND;
+  if (!artists || !artists.length) return (ctx.status = StatusCodes.NOT_FOUND);
 
-  const trackIds:number[] = [];
+  const trackIds: number[] = [];
   for (let i = 0; i < artists.length; i += 1) {
     trackIds.push(artists[i].track.id);
   }
 
-  const tracks = await getRepository(trackEntity).createQueryBuilder('track')
+  const tracks = await getRepository(trackEntity)
+    .createQueryBuilder('track')
     .where('track.id IN (:...ids)', { ids: trackIds })
     .getMany();
 
@@ -61,21 +62,21 @@ router.get('/', async (ctx:Koa.Context) => {
   };
 });
 
-router.post('/', createSpotifyToken(), fetchTrackMetadata(), async (ctx:Koa.Context) => {
-  const trackRepo:Repository<trackEntity> = getRepository(trackEntity);
-  const artistRepo:Repository<artistyEntity> = getRepository(artistyEntity);
+router.post('/', createSpotifyToken(), fetchTrackMetadata(), async (ctx: Koa.Context) => {
+  const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
+  const artistRepo: Repository<artistyEntity> = getRepository(artistyEntity);
 
   const metadata = ctx.state.trackMetadata;
   const artistsList = metadata.artists || [];
 
-  const track:trackEntity = trackRepo.create();
-  track.isrc = ctx.state.trackISRC,
-  track.title = metadata.name,
+  const track: trackEntity = trackRepo.create();
+  track.isrc = ctx.state.trackISRC;
+  track.title = metadata.name;
   track.imageURI = metadata.album.images[0].url;
   track.artists = [];
 
   for (let i = 0; i < artistsList.length; i += 1) {
-    const artist:artistyEntity = artistRepo.create({ name: artistsList[i].name });
+    const artist: artistyEntity = artistRepo.create({ name: artistsList[i].name });
     track.artists.push(artist);
   }
 

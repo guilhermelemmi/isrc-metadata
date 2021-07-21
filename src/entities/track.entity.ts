@@ -3,7 +3,6 @@ import artistyEntity from './artist.entity';
 
 @Entity()
 export default class Track {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -16,7 +15,7 @@ export default class Track {
   @Column()
   imageURI: string;
 
-  @OneToMany(() => artistyEntity, artist => artist.track, {
+  @OneToMany(() => artistyEntity, (artist) => artist.track, {
     cascade: true,
   })
   artists: artistyEntity[];

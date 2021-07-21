@@ -4,7 +4,7 @@ import genericErrorHandler from '../middlewares/genericErrorHandler';
 import tracksController from '../controllers/tracks.controller';
 import artistsController from '../controllers/artists.controller';
 
-const app:Koa = new Koa();
+const app: Koa = new Koa();
 
 app.use(genericErrorHandler());
 app.use(koaBody());
