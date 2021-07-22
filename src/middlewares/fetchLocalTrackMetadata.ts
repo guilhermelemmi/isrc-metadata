@@ -8,10 +8,10 @@ export default function fetchLocalTrackMetadata() {
     ctx: Koa.Context,
     next: () => Promise<any>
   ) {
-    const body = ctx.request.body as AddTrackRequest;
+    const { isrc } = ctx.request.body as AddTrackRequest;
     const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
     const track = await trackRepo.findOne({
-      where: { isrc: body.isrc },
+      where: { isrc },
       relations: ['artists'],
     });
 

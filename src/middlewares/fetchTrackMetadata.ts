@@ -4,11 +4,11 @@ import { AddTrackRequest, TrackMetadata } from '../interfaces/interfaces';
 
 export default function fetchTrackMetadata() {
   return async function fetchTrackMetadataMiddleware(ctx: Koa.Context, next: () => Promise<any>) {
-    const body = ctx.request.body as AddTrackRequest;
+    const { isrc } = ctx.request.body as AddTrackRequest;
 
     let tracks;
     try {
-      tracks = await searchTracksByISRC(body.isrc, ctx.state.spotifyToken);
+      tracks = await searchTracksByISRC(isrc, ctx.state.spotifyToken);
     } catch (err) {
       ctx.throw(err.status, err.message);
     }
@@ -19,7 +19,7 @@ export default function fetchTrackMetadata() {
 
     tracks.sort((a: TrackMetadata, b: TrackMetadata) => b.popularity - a.popularity);
     ctx.state.trackMetadata = tracks[0];
-    ctx.state.trackISRC = body.isrc;
+    ctx.state.trackISRC = isrc;
 
     return next();
   };

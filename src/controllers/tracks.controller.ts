@@ -49,7 +49,7 @@ router.get('/', async (ctx: Koa.Context) => {
 
   const trackIds: number[] = [];
   for (let i = 0; i < artists.length; i += 1) {
-    trackIds.push(artists[i].track.id);
+    trackIds.push(artists[i].track?.id);
   }
 
   const tracks = await getRepository(trackEntity)
@@ -75,13 +75,13 @@ router.post(
     const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
     const artistRepo: Repository<artistyEntity> = getRepository(artistyEntity);
 
-    const metadata = ctx.state.trackMetadata;
+    const metadata = ctx.state.trackMetadata || {};
     const artistsList = metadata.artists || [];
 
     const track: trackEntity = trackRepo.create();
     track.isrc = ctx.state.trackISRC;
     track.title = metadata.name;
-    track.imageURI = metadata.album.images[0].url;
+    track.imageURI = metadata.album?.images[0]?.url;
     track.artists = [];
 
     for (let i = 0; i < artistsList.length; i += 1) {
