@@ -1,0 +1,120 @@
+openapi: 3.0.3 
+info:
+  description: "ISRC Metadata is an API that consumes data from the Spotify API, persists it on a database and then exposes music metadata to be retrieved by ISRC code or by artist name. ISRC stands for International Standard Recording Code and is used by the music industry to reference each unique song recording of a certain composition."
+  version: "1.0.0"
+  title: "ISRC Metadata"
+servers: 
+- url: "http://localhost:4000"
+tags: 
+- name: tracks
+  description: Track operations
+paths: 
+  /tracks:
+    get:
+      tags:
+      - "tracks"
+      description: Returns all tracks for a given artist name
+      operationId: findTracksByArtist
+      parameters: 
+      - name: artist
+        in: query
+        description: The name of the artist used as query to find related tracks
+        required: true
+        schema:
+          type: string
+      responses: 
+        '200':
+          description: A list of tracks.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseTracks'
+    post:
+      tags:
+      - "tracks"
+      description: Fetch metadata for a given ISRC and save it to the local DB
+      operationId: addTrack
+      requestBody:
+        content:
+          'application/json':
+            schema:
+             properties: 
+              isrc: 
+                  description: The ISRC code to use in the track creation
+                  type: string
+             required:
+               - isrc
+      responses:
+        '200':
+          description: The created track or the previously existent track from the local DB
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseTrack'
+  /tracks/{trackISRC}:
+    get:
+      tags:
+      - "tracks"
+      description: Returns a track for the given ISRC code
+      operationId: findTrackByISRC
+      parameters: 
+      - name: trackISRC
+        in: path
+        description: The ISRC code to use as query to find the related track
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The track metadata for the given ISRC
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseTrack'
+components:
+  schemas:
+    Track:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        isrc:
+          type: string
+        title:
+          type: string
+        imageURI:
+          type: string
+        artists:
+          type: array
+          items:
+            $ref: '#/components/schemas/Artist'
+    Artist:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    ApiResponseTracks:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            tracks:
+              type: array
+              items:
+                $ref: '#/components/schemas/Track'
+    ApiResponseTrack:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            track:
+              $ref: '#/components/schemas/Track'
+externalDocs:
+  description: "Find out more about ISRC Metadata"
+  url: "https://github.com/guilhermelemmi/isrc-metadata"

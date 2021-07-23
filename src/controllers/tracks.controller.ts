@@ -54,6 +54,7 @@ router.get('/', async (ctx: Koa.Context) => {
 
   const tracks = await getRepository(trackEntity)
     .createQueryBuilder('track')
+    .leftJoinAndSelect('track.artists', 'artist')
     .where('track.id IN (:...ids)', { ids: trackIds })
     .getMany();
 

@@ -20,11 +20,11 @@ SPOTIFY_CLIENT_ID={YOUR SPOTIFY CLIENT ID}
 SPOTIFY_CLIENT_SECRET={YOUR SPOTIFY CLIENT SECRET}
 ```
 
-After you done that, open a terminal window, navigate to the project folder and run:
+After that, open a terminal window, navigate to the project folder and run:
 ```
 docker compose up --build
 ```
-This will install the PostgreSQL DB and run the ISRC Metadata API on your http://localhost:4000.
+This will install the PostgreSQL DB, run the Swagger documentation on http://localhost:8080 and run the API on http://localhost:4000.
 
 # Usage
 Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cURL](https://blog.postman.com/curl-and-postman-work-wonderfully-together/) requests below:
@@ -44,24 +44,22 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
 	}'
 **Response:**
 
-    {
-	  "data": {
-	    "tracks": [
-		  {
-		    "id": 100,
-			  "isrc": "GBAYE0601498",
-			  "title": "Yellow Submarine - Remastered 2009",
-			  "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
+  {
+    "data": {
+      "track": {
+        "id": 100,
+        "isrc": "GBAYE0601498",
+        "title": "Yellow Submarine - Remastered 2009",
+        "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
         "artists": [
           {
             id: 1,
             name: "The Beatles"
           }
         ]
-		  }
-		]
-	  }
-	}
+      }
+    }
+  }
 
 ### Read Track by ISRC
 **Endpoint:**
@@ -74,25 +72,22 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
 
 **Response:**
 
-    {
-	  "data": {
-	    "tracks": [
-		  {
-		    "id": 100,
-			  "isrc": "GBAYE0601498",
-			  "title": "Yellow Submarine - Remastered 2009",
-			  "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
+  {
+    "data": {
+      "track": {
+        "id": 100,
+        "isrc": "GBAYE0601498",
+        "title": "Yellow Submarine - Remastered 2009",
+        "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
         "artists": [
           {
             id: 1,
             name: "The Beatles"
           }
         ]
-		  }
-		 ]
-	  }
-	}
-
+      }
+    }
+  }
 
 ### Read Tracks by Artist
 **Endpoint:**
@@ -105,24 +100,39 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
 
 **Response:**
 
-    {
-	  "data": {
-	    "tracks": [
-		  {
-		    "id": 100,
-			  "isrc": "GBAYE0601498",
-			  "title": "Yellow Submarine - Remastered 2009",
-			  "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
-        "artists": [
-          {
-            id: 1,
-            name: "The Beatles"
-          }
-        ]
-		  }
-		]
-	  }
-	}
+  {
+    "data": {
+      "tracks": [
+        {
+          "id": 100,
+          "isrc": "GBAYE0601498",
+          "title": "Yellow Submarine - Remastered 2009",
+          "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
+          "artists": [
+            {
+              id: 1,
+              name: "The Beatles"
+            }
+          ]
+        },
+        {
+          "id": 101,
+          "isrc": "GBAYE0601691",
+          "title": "Something - Remastered 2009",
+          "imageURI": "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
+          "artists": [
+              {
+                  "id": 2,
+                  "name": "The Beatles"
+              }
+          ]
+        }
+      ]
+    }
+  }
+
+## Swagger
+The API has an embedded Swagger UI client to display the documentation. It can be visited on address [http://localhost:8080](http://localhost:8080) after running docker composer.
 
 # Tech Stack
 To create this project, the following techs were used:
@@ -139,7 +149,7 @@ To create this project, the following techs were used:
  
  The current database modelling uses a One-To-Many relationship between a track and it's performing artists, reducing the execution time of the "Tracks by Artist" search. However, that relation is still not ideal as it produces duplicated artists in the system, since an artist has often contributed to more than one track.
 
-So the proper modelling would be to use a Many-To-Many relationship between tracks and artists, which will active optimal performance and avoid data duplication in the Database.
+So the proper modelling would be to use a Many-To-Many relationship between tracks and artists, which will achieve optimal performance and avoid data duplication in the Database.
 
  # Security Considerations
 For now this is a Public API, meaning that every person or machine could create the requests and use the API.
@@ -151,7 +161,7 @@ To address those concerns, three actions needs to be taken:
  - Implement proper logging and monitoring, to have visibility over issues and abusers;
  - Protect all endpoints with [Rate Limiting](https://cloud.google.com/architecture/rate-limiting-strategies-techniques);
  - Implement endpoint authentication with JWT (JSON Web Tokens):
-    To get a valid token, an application would first need to register itself to get access to a private key and secret. Once an application has this key and secret stored safely on server side, it could use those values to call a `login` endpoint which would validate the client key and secret and then issue a JWT Token to be used by the client in the subsequent requests. It subsequent request is only successful if the token is passed in the HTTP headers and if the token is valid.
+    To get a valid token, an application would first need to register itself to get access to a private key and secret. Once an application has this key and secret stored safely on server side, it could use those values to call a `login` endpoint which would validate the client key and secret and then issue a JWT Token to be used by the client in the subsequent requests. All subsequent requests are only successful if the token is passed in the HTTP headers and if it is valid.
     
     The diagram below illustrates this flow, know as the OAuth 2.0, Client Credentials Grant flow:
 
@@ -159,7 +169,7 @@ To address those concerns, three actions needs to be taken:
  
 # Next Steps
  - create unit tests
- - integrate swagger documentation
+ - ~~integrate swagger documentation~~
  - ~~fix known bugs~~
  - improve performance and security as outlined above
  - create a demo frontend app
