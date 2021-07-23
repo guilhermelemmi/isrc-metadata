@@ -1,11 +1,12 @@
 import * as Koa from 'koa';
 import * as koaBody from 'koa-body';
+import * as cors from '@koa/cors';
 import genericErrorHandler from '../middlewares/genericErrorHandler';
 import tracksController from '../controllers/tracks.controller';
 import artistsController from '../controllers/artists.controller';
 
 const app: Koa = new Koa();
-
+app.use(cors());
 app.use(genericErrorHandler());
 app.use(koaBody());
 
