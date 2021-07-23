@@ -44,22 +44,22 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
 	}'
 **Response:**
 
-  {
-    "data": {
-      "track": {
-        "id": 100,
-        "isrc": "GBAYE0601498",
-        "title": "Yellow Submarine - Remastered 2009",
-        "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
-        "artists": [
-          {
-            id: 1,
-            name: "The Beatles"
-          }
-        ]
+    {
+      "data": {
+        "track": {
+          "id": 100,
+          "isrc": "GBAYE0601498",
+          "title": "Yellow Submarine - Remastered 2009",
+          "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
+          "artists": [
+            {
+              id: 1,
+              name: "The Beatles"
+            }
+          ]
+        }
       }
     }
-  }
 
 ### Read Track by ISRC
 **Endpoint:**
@@ -72,22 +72,22 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
 
 **Response:**
 
-  {
-    "data": {
-      "track": {
-        "id": 100,
-        "isrc": "GBAYE0601498",
-        "title": "Yellow Submarine - Remastered 2009",
-        "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
-        "artists": [
-          {
-            id: 1,
-            name: "The Beatles"
-          }
-        ]
+    {
+      "data": {
+        "track": {
+          "id": 100,
+          "isrc": "GBAYE0601498",
+          "title": "Yellow Submarine - Remastered 2009",
+          "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
+          "artists": [
+            {
+              id: 1,
+              name: "The Beatles"
+            }
+          ]
+        }
       }
     }
-  }
 
 ### Read Tracks by Artist
 **Endpoint:**
@@ -100,36 +100,36 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
 
 **Response:**
 
-  {
-    "data": {
-      "tracks": [
-        {
-          "id": 100,
-          "isrc": "GBAYE0601498",
-          "title": "Yellow Submarine - Remastered 2009",
-          "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
-          "artists": [
-            {
-              id: 1,
-              name: "The Beatles"
-            }
-          ]
-        },
-        {
-          "id": 101,
-          "isrc": "GBAYE0601691",
-          "title": "Something - Remastered 2009",
-          "imageURI": "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
-          "artists": [
+    {
+      "data": {
+        "tracks": [
+          {
+            "id": 100,
+            "isrc": "GBAYE0601498",
+            "title": "Yellow Submarine - Remastered 2009",
+            "imageURI": "https://i.scdn.co/image/ab67616d0000b27328b8b9b46428896e6491e97a",
+            "artists": [
               {
-                  "id": 2,
-                  "name": "The Beatles"
+                id: 1,
+                name: "The Beatles"
               }
-          ]
-        }
-      ]
+            ]
+          },
+          {
+            "id": 101,
+            "isrc": "GBAYE0601691",
+            "title": "Something - Remastered 2009",
+            "imageURI": "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
+            "artists": [
+                {
+                    "id": 2,
+                    "name": "The Beatles"
+                }
+            ]
+          }
+        ]
+      }
     }
-  }
 
 ## Swagger
 The API has an embedded Swagger UI client to display the documentation. It can be visited on address [http://localhost:8080](http://localhost:8080) after running docker composer.
