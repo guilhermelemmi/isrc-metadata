@@ -9,7 +9,7 @@ ISRC stands for **International Standard Recording Code** and is used by the mus
 
 Download and extract this project in a folder that will be referenced as "Project Folder" from now on.
 
-You will need [Docker](https://docs.docker.com/desktop/#download-and-install) installed to run the application. Older versions of Docker may also require [Docker Compose](https://docs.docker.com/compose/install/), so we recommend using the latest version to avoid installing Compose separately, since it already comes embedded in the latest version).
+You will need [Docker](https://docs.docker.com/desktop/#download-and-install) installed to run the application. Older versions of Docker may also require [Docker Compose](https://docs.docker.com/compose/install/), so we recommend using the latest version to avoid installing Compose separately, since it already comes embedded in the latest version.
 
 You also need to get a CLIENT_ID and CLIENT_SECRET to use the Spotify API. To get that, head over to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/), create an account or login and click on "Create App". Once you have created an app, you'll be able to see the CLIENT_ID and CLIENT_SECRET.
 
