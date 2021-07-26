@@ -42,21 +42,17 @@ router.get('/', async (ctx: Koa.Context) => {
     where: {
       name: Like(`%${query.artist}%`),
     },
-    relations: ['track'],
+    relations: ['tracks'],
   });
 
   if (!artists || !artists.length) return (ctx.status = StatusCodes.NOT_FOUND);
 
-  const trackIds: number[] = [];
+  const tracks: trackEntity[] = [];
   for (let i = 0; i < artists.length; i += 1) {
-    trackIds.push(artists[i].track?.id);
+    if (artists[i].tracks) {
+      tracks.push(...artists[i].tracks);
+    }
   }
-
-  const tracks = await getRepository(trackEntity)
-    .createQueryBuilder('track')
-    .leftJoinAndSelect('track.artists', 'artist')
-    .where('track.id IN (:...ids)', { ids: trackIds })
-    .getMany();
 
   if (!tracks || !tracks.length) {
     ctx.throw(StatusCodes.NOT_FOUND);
@@ -86,7 +82,10 @@ router.post(
     track.artists = [];
 
     for (let i = 0; i < artistsList.length; i += 1) {
-      const artist: artistyEntity = artistRepo.create({ name: artistsList[i].name });
+      let artist: artistyEntity = await artistRepo.findOne({ name: artistsList[i].name });
+      if (!artist) {
+        artist = artistRepo.create({ name: artistsList[i].name });
+      }
       track.artists.push(artist);
     }
 

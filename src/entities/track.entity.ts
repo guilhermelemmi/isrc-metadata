@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import artistyEntity from './artist.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
+import artistEntity from './artist.entity';
 
 @Entity()
 export default class Track {
@@ -15,8 +15,9 @@ export default class Track {
   @Column()
   imageURI: string;
 
-  @OneToMany(() => artistyEntity, (artist) => artist.track, {
+  @ManyToMany(() => artistEntity, artist => artist.tracks, {
     cascade: true,
   })
-  artists: artistyEntity[];
+  @JoinTable()
+  artists: artistEntity[];
 }

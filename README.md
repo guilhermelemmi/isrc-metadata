@@ -121,10 +121,10 @@ Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cUR
             "title": "Something - Remastered 2009",
             "imageURI": "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
             "artists": [
-                {
-                    "id": 2,
-                    "name": "The Beatles"
-                }
+              {
+                id: 1,
+                name: "The Beatles"
+              }
             ]
           }
         ]
@@ -142,16 +142,7 @@ To create this project, the following techs were used:
  - [TypeORM](https://typeorm.io/#/) is an ORM (Object Relational Model) library created to be used with Typescript. It abstracts the database layer and provides simple entity management through TS Classes.
  - [PostgreSQL](https://www.postgresql.org/), an open source relational database.
  
- # Performance Considerations
- The choice of relationship between a track and a set of performing artists can impact drastically on the performance of the application. 
- 
- An approach of embedding the artist list within the track metadata would incurr into performance issues when trying to search tracks by artist, since all tracks would have to be visited and inspected to create the result set of tracks.
- 
- The current database modelling uses a One-To-Many relationship between a track and it's performing artists, reducing the execution time of the "Tracks by Artist" search. However, that relation is still not ideal as it produces duplicated artists in the system, since an artist has often contributed to more than one track.
-
-So the proper modelling would be to use a Many-To-Many relationship between tracks and artists, which will achieve optimal performance and avoid data duplication in the Database.
-
- # Security Considerations
+# Security Considerations
 For now this is a Public API, meaning that every person or machine could create the requests and use the API.
 
 This doesn't scale well in the real world as it opens the application to DOS and DDOS attacks. Furthermore, it uses Spotify API, which also comes under rate limiting for each client, so an Open API would quickly exhaust the Spotify API usage limits.
@@ -171,5 +162,6 @@ To address those concerns, three actions needs to be taken:
  - create unit tests
  - ~~integrate swagger documentation~~
  - ~~fix known bugs~~
- - improve performance and security as outlined above
- - create a demo frontend app
+ - ~~refactor track and artists relation to be many-to-many~~~
+ - improve security with logs and rate limiting
+ - create demo frontend app

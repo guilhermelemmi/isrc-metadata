@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
 import trackEntity from './track.entity';
 
 @Entity()
@@ -9,7 +9,6 @@ export default class Artist {
   @Column()
   name: string;
 
-  @ManyToOne(() => trackEntity, (track) => track.artists)
-  @JoinColumn({ name: 'track_id' })
-  track: trackEntity;
+  @ManyToMany(() => trackEntity, track => track.artists)
+  tracks: trackEntity[];
 }
