@@ -22,12 +22,12 @@ SPOTIFY_CLIENT_SECRET={YOUR SPOTIFY CLIENT SECRET}
 
 After that, open a terminal window, navigate to the project folder and run:
 ```
-docker compose up --build
+docker compose up --build --force-recreate
 ```
 This will install the PostgreSQL DB, run the Swagger documentation on http://localhost:8080 and run the API on http://localhost:4000.
 
 ## Troubleshoot
-As the project is still in development, there are constant changes to code, composer files and DB Schema. If an unexpected response is returned from any API endpoint after a `git pull`, try stopping the Docker Compose command using [Docker Desktop](https://www.docker.com/products/docker-desktop) to manually remove all containers and volumes before trying to run `docker compose up --build` again.
+As the project is still in development, there are constant changes to code, composer files and DB Schema. If an unexpected response is returned from any API endpoint after a `git pull`, try to stop the Docker Compose command and then use [Docker Desktop](https://www.docker.com/products/docker-desktop) to manually remove all containers and volumes, before trying to run `docker compose up --build` again.
 
 # Usage
 Pick an HTTP client like [Postman](https://www.postman.com/) and [import the cURL](https://blog.postman.com/curl-and-postman-work-wonderfully-together/) requests below:
