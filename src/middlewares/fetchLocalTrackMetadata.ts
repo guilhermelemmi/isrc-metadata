@@ -1,7 +1,7 @@
 import * as Koa from 'koa';
 import { getRepository, Repository, Like } from 'typeorm';
 import { AddTrackRequest } from '../interfaces/interfaces';
-import trackEntity from '../entities/track.entity';
+import Track from '../entities/track.entity';
 
 export default function fetchLocalTrackMetadata() {
   return async function fetchLocalTrackMetadataMiddleware(
@@ -9,7 +9,7 @@ export default function fetchLocalTrackMetadata() {
     next: () => Promise<any>
   ) {
     const { isrc } = ctx.request.body as AddTrackRequest;
-    const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
+    const trackRepo: Repository<Track> = getRepository(Track);
     const track = await trackRepo.findOne({
       where: { isrc },
       relations: ['artists'],

@@ -7,6 +7,7 @@ const PORT: number = Number(process.env.PORT) || 4000;
 connectToDb()
   .then(() => {
     console.log('DB connected');
+    console.log('Swagger documentation is ready on port 8080');
     console.log(`API is ready and listening on port ${PORT}`);
     app.listen(PORT);
   })

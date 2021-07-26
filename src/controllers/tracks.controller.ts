@@ -1,9 +1,9 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import { getRepository, Repository, Like } from 'typeorm';
-import trackEntity from '../entities/track.entity';
 import { StatusCodes } from 'http-status-codes';
-import artistyEntity from '../entities/artist.entity';
+import Track from '../entities/track.entity';
+import Artist from '../entities/artist.entity';
 import fetchLocalTrackMetadata from '../middlewares/fetchLocalTrackMetadata';
 import fetchTrackMetadata from '../middlewares/fetchTrackMetadata';
 import createSpotifyToken from '../middlewares/createSpotifyToken';
@@ -15,7 +15,7 @@ const routerOpts: Router.IRouterOptions = {
 const router: Router = new Router(routerOpts);
 
 router.get('/:track_isrc', async (ctx: Koa.Context) => {
-  const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
+  const trackRepo: Repository<Track> = getRepository(Track);
 
   const track = await trackRepo.findOne({
     where: { isrc: ctx.params.track_isrc },
@@ -36,7 +36,7 @@ router.get('/', async (ctx: Koa.Context) => {
 
   if (!query || !query.artist) return (ctx.status = StatusCodes.BAD_REQUEST);
 
-  const artistRepo: Repository<artistyEntity> = getRepository(artistyEntity);
+  const artistRepo: Repository<Artist> = getRepository(Artist);
   const artists = await artistRepo.find({
     select: ['name'],
     where: {
@@ -47,7 +47,7 @@ router.get('/', async (ctx: Koa.Context) => {
 
   if (!artists || !artists.length) return (ctx.status = StatusCodes.NOT_FOUND);
 
-  const tracks: trackEntity[] = [];
+  const tracks: Track[] = [];
   for (let i = 0; i < artists.length; i += 1) {
     if (artists[i].tracks) {
       tracks.push(...artists[i].tracks);
@@ -69,20 +69,20 @@ router.post(
   createSpotifyToken(),
   fetchTrackMetadata(),
   async (ctx: Koa.Context) => {
-    const trackRepo: Repository<trackEntity> = getRepository(trackEntity);
-    const artistRepo: Repository<artistyEntity> = getRepository(artistyEntity);
+    const trackRepo: Repository<Track> = getRepository(Track);
+    const artistRepo: Repository<Artist> = getRepository(Artist);
 
     const metadata = ctx.state.trackMetadata || {};
     const artistsList = metadata.artists || [];
 
-    const track: trackEntity = trackRepo.create();
+    const track: Track = trackRepo.create();
     track.isrc = ctx.state.trackISRC;
     track.title = metadata.name;
     track.imageURI = metadata.album?.images[0]?.url;
     track.artists = [];
 
     for (let i = 0; i < artistsList.length; i += 1) {
-      let artist: artistyEntity = await artistRepo.findOne({ name: artistsList[i].name });
+      let artist: Artist = await artistRepo.findOne({ name: artistsList[i].name });
       if (!artist) {
         artist = artistRepo.create({ name: artistsList[i].name });
       }
