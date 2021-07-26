@@ -7,8 +7,6 @@ services:
       POSTGRES_DB: isrc-metadata
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
     ports:
       - '5432:5432'
     restart: always
